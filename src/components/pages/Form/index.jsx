@@ -192,7 +192,7 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
 };
 const CommonEmailData = () => {
   return (
-    <Stack gap="16px" mt={5}>
+    <Stack gap="16px">
       <TextField
         label={
           <RegText variant="body1" sx={styles.labelText}>
@@ -220,6 +220,7 @@ const CommonEmailData = () => {
   );
 };
 const StepThree = ({ emailType, stepThreePrevHandler }) => {
+  const [editMail, setEditMail] = useState({ show: false, email: "" });
   if (emailType === "single") {
     return (
       <>
@@ -245,7 +246,27 @@ const StepThree = ({ emailType, stepThreePrevHandler }) => {
   if (emailType === "bulk") {
     return (
       <Stack mt={3}>
-        <MailTable />
+        <Stack direction="row" gap="16px">
+          <MailTable setEditMail={setEditMail} />
+          {editMail.show && (
+            <Stack width="50%" bgcolor="#fcfcfc" p={2} borderRadius={3}>
+              <CommonEmailData />
+              <Stack direction="row" gap="16px">
+                <Button color="primary" variant="contained" sx={{ mt: 2 }}>
+                  <MedText>Save</MedText>
+                </Button>
+                <Button
+                  color="warning"
+                  variant="outlined"
+                  sx={{ mt: 2 }}
+                  onClick={() => setEditMail({ show: false, email: "" })}
+                >
+                  <MedText>close</MedText>
+                </Button>
+              </Stack>
+            </Stack>
+          )}
+        </Stack>
         <Stack direction="row" gap="16px" mt={4}>
           <Button
             variant="contained"

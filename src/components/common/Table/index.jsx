@@ -41,10 +41,10 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
-export default function MailTable() {
+export default function MailTable({ setEditMail }) {
   return (
-    <TableContainer component={Paper} sx={{borderRadius:3}}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+    <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
+      <Table aria-label="email table">
         <TableHead>
           <TableRow>
             <StyledTableCell>
@@ -55,6 +55,9 @@ export default function MailTable() {
             </StyledTableCell>
             <StyledTableCell align="right">
               <RegText>Email ID</RegText>
+            </StyledTableCell>
+            <StyledTableCell align="right">
+              <RegText>Edit</RegText>
             </StyledTableCell>
           </TableRow>
         </TableHead>
@@ -69,6 +72,16 @@ export default function MailTable() {
               </StyledTableCell>
               <StyledTableCell align="right">
                 <RegText>{row.fat}</RegText>
+              </StyledTableCell>
+              <StyledTableCell align="right">
+                <RegText
+                  onClick={() =>
+                    setEditMail({ show: true, email: "enter email here" })
+                  }
+                  sx={{ textDecoration: "underline", cursor: "pointer" }}
+                >
+                  Edit
+                </RegText>
               </StyledTableCell>
             </StyledTableRow>
           ))}
