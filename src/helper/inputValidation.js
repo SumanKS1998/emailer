@@ -1,6 +1,6 @@
 export const validateInput = (value, setError, fieldName) => {
   if (!value.trim()) {
-    setError(`${fieldName} cannot be empty.`);
+    setError(`${fieldName} can not be empty.`);
     return false;
   }
   setError("");

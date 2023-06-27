@@ -14,7 +14,7 @@ const StepOne = ({ stepOneHandler }) => {
   const [ctaUrl, setCtaUrl] = useState("");
   const [ctaUrlError, setCtaUrlError] = useState("");
 
-  const handleNext = () => {
+  const handleNext = (emailType) => {
     if (
       basePrompt.trim() === "" ||
       productPlaceholder.trim() === "" ||
@@ -23,7 +23,7 @@ const StepOne = ({ stepOneHandler }) => {
       return;
     }
     stepOneHandler({
-      type: "single",
+      emailType,
       basePrompt,
       productPlaceholder,
       ctaUrl,
@@ -115,13 +115,17 @@ const StepOne = ({ stepOneHandler }) => {
         </RegText>
       )}
       <Stack direction="row" gap="16px">
-        <Button variant="contained" color="primary" onClick={handleNext}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleNext("single")}
+        >
           <MedText>Single Email</MedText>
         </Button>
         <Button
           variant="contained"
           color="warning"
-          onClick={() => stepOneHandler({ type: "bulk" })}
+          onClick={() => handleNext("bulk")}
         >
           <MedText> Bulk Email</MedText>
         </Button>
@@ -130,7 +134,36 @@ const StepOne = ({ stepOneHandler }) => {
   );
 };
 const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [socialMediaError, setSocialMediaError] = useState("");
   const [selectedCSV, setSelectedCSV] = useState();
+
+  const handleName = (e) => {
+    const inputValue = e.target.value;
+    validateInput(inputValue, setNameError, "Name");
+    setName(inputValue);
+  };
+
+  const handleSubmit = () => {
+    if (emailType === "single") {
+      if (name.trim() === "") return;
+      if (twitter.trim() === "" && linkedin.trim() === "") {
+        setSocialMediaError("Twitter or LinkedIn url can not be empty.");
+        return;
+      }
+    }
+    stepTwoHandler({
+      emailType,
+      name,
+      twitter,
+      linkedin,
+    });
+    setSocialMediaError("");
+  };
+
   const renderBtns = () => {
     return (
       <Stack direction="row" gap="16px" mt={4}>
@@ -141,12 +174,8 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
         >
           <MedText>Previous Step</MedText>
         </Button>
-        <Button
-          variant="contained"
-          color="warning"
-          onClick={() => stepTwoHandler()}
-        >
-          <MedText>Submit</MedText>
+        <Button variant="contained" color="warning" onClick={handleSubmit}>
+          <MedText>Next</MedText>
         </Button>
       </Stack>
     );
@@ -161,13 +190,27 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
                 Name
               </RegText>
             }
+            value={name}
+            onChange={handleName}
           />
+          {nameError && (
+            <RegText
+              sx={{
+                color: "red",
+                fontSize: "14px",
+              }}
+            >
+              {nameError}
+            </RegText>
+          )}
           <TextField
             label={
               <RegText variant="body1" sx={styles.labelText}>
                 Twitter Handle
               </RegText>
             }
+            value={twitter}
+            onChange={(e) => setTwitter(e.target.value)}
           />
           <TextField
             label={
@@ -175,7 +218,19 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
                 LinkedIn URL
               </RegText>
             }
+            value={linkedin}
+            onChange={(e) => setLinkedin(e.target.value)}
           />
+          {socialMediaError && (
+            <RegText
+              sx={{
+                color: "red",
+                fontSize: "14px",
+              }}
+            >
+              {socialMediaError}
+            </RegText>
+          )}
         </Stack>
         {renderBtns()}
       </Stack>
@@ -184,7 +239,10 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   if (emailType === "bulk") {
     return (
       <>
-        <DragAndDrop setSelectedCSV={setSelectedCSV} />
+        <DragAndDrop
+          setSelectedCSV={setSelectedCSV}
+          selectedCSV={selectedCSV}
+        />
         {renderBtns()}
       </>
     );
@@ -288,16 +346,22 @@ const Pages = () => {
   const [emailType, setEmailType] = useState("");
   const steps = ["Enter basic details", "Enter Emails", "Submit"];
   const stepOneHandler = (data) => {
-    const { type, basePrompt, productPlaceholder, ctaUrl } = data;
-    console.log("Step One Completed - Type: ", type);
+    const { emailType, basePrompt, productPlaceholder, ctaUrl } = data;
+    console.log("Step One Completed - Type: ", emailType);
     console.log("Base Prompt: ", basePrompt);
     console.log("Product Placeholder: ", productPlaceholder);
     console.log("CTA URL: ", ctaUrl);
     setActiveStep(1);
-    setEmailType(type);
+    setEmailType(emailType);
   };
-  const stepTwoHandler = () => {
+  const stepTwoHandler = (data) => {
+    const { name, twitter, linkedin, emailType } = data;
+    console.log("Step Two Completed - Type: ", emailType);
+    console.log("Name: ", name);
+    console.log("Twitter: ", twitter);
+    console.log("LinkedIn: ", linkedin);
     setActiveStep(2);
+    setEmailType(emailType);
   };
   const stepTwoPrevStepHandler = () => {
     setActiveStep(0);
