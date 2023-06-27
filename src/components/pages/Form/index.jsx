@@ -4,6 +4,7 @@ import { Button, Container, Stack, TextField } from "@mui/material";
 import { MedText, RegText } from "../../styles/fonts";
 import { validateInput } from "../../../helper/inputValidation";
 import DragAndDrop from "../../common/DragAndDrop";
+import MailTable from "../../common/Table";
 
 const StepOne = ({ stepOneHandler }) => {
   const [basePrompt, setBasePrompt] = useState("");
@@ -129,6 +130,7 @@ const StepOne = ({ stepOneHandler }) => {
   );
 };
 const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
+  const [selectedCSV, setSelectedCSV] = useState();
   const renderBtns = () => {
     return (
       <Stack direction="row" gap="16px" mt={4}>
@@ -149,7 +151,6 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
       </Stack>
     );
   };
-  const [selectedCSV, setSelectedCSV] = useState();
   if (emailType === "single") {
     return (
       <Stack>
@@ -183,8 +184,81 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   if (emailType === "bulk") {
     return (
       <>
-        <DragAndDrop setSelectedCSV={setSelectedCSV} />;{renderBtns()}
+        <DragAndDrop setSelectedCSV={setSelectedCSV} />
+        {renderBtns()}
       </>
+    );
+  }
+};
+const CommonEmailData = () => {
+  return (
+    <Stack gap="16px" mt={5}>
+      <TextField
+        label={
+          <RegText variant="body1" sx={styles.labelText}>
+            Subject
+          </RegText>
+        }
+      />
+      <TextField
+        multiline
+        rows={4}
+        label={
+          <RegText variant="body1" sx={styles.labelText}>
+            Body
+          </RegText>
+        }
+      />
+      <TextField
+        label={
+          <RegText variant="body1" sx={styles.labelText}>
+            Enter Email
+          </RegText>
+        }
+      />
+    </Stack>
+  );
+};
+const StepThree = ({ emailType, stepThreePrevHandler }) => {
+  if (emailType === "single") {
+    return (
+      <>
+        <CommonEmailData stepThreePrevHandler={stepThreePrevHandler} />{" "}
+        <Stack direction="row" gap="16px" mt={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={stepThreePrevHandler}
+          >
+            <MedText>Previous Step</MedText>
+          </Button>
+          <Button variant="contained" color="warning">
+            <MedText>Save and Send Email</MedText>
+          </Button>
+          <Button variant="outlined" color="warning">
+            <MedText>Save</MedText>
+          </Button>
+        </Stack>
+      </>
+    );
+  }
+  if (emailType === "bulk") {
+    return (
+      <Stack mt={3}>
+        <MailTable />
+        <Stack direction="row" gap="16px" mt={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={stepThreePrevHandler}
+          >
+            <MedText>Previous Step</MedText>
+          </Button>
+          <Button variant="contained" color="warning">
+            <MedText>Save All</MedText>
+          </Button>
+        </Stack>
+      </Stack>
     );
   }
 };
@@ -207,6 +281,9 @@ const Pages = () => {
   const stepTwoPrevStepHandler = () => {
     setActiveStep(0);
   };
+  const stepThreePrevHandler = () => {
+    setActiveStep(1);
+  };
   return (
     <Stack sx={styles.parentContainer}>
       <Container sx={styles.container}>
@@ -218,9 +295,15 @@ const Pages = () => {
         {activeStep === 0 && <StepOne stepOneHandler={stepOneHandler} />}
         {activeStep === 1 && (
           <StepTwo
-            stepOneHandler={stepTwoHandler}
+            stepTwoHandler={stepTwoHandler}
             emailType={emailType}
             stepTwoPrevStepHandler={stepTwoPrevStepHandler}
+          />
+        )}
+        {activeStep === 2 && (
+          <StepThree
+            emailType={emailType}
+            stepThreePrevHandler={stepThreePrevHandler}
           />
         )}
       </Container>
@@ -236,7 +319,7 @@ const styles = {
     height: "100vh",
     bgcolor: "#111111",
   },
-  container: { bgcolor: "#fff", p: 5, borderRadius: 5, minHeight: "75vh" },
+  container: { bgcolor: "#fff", p: 5, borderRadius: 5 },
   labelText: {
     color: "#9e9e9e",
   },
