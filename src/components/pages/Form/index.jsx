@@ -9,8 +9,7 @@ const StepOne = ({ stepOneHandler }) => {
       gap="16px"
       component="form"
       my={5}
-      width={{ xs: "95%", md: "850px" }}
-      mx="auto"
+       mx="auto"
     >
       <TextField
         label={
@@ -76,7 +75,7 @@ const Pages = () => {
       height="100vh"
       bgcolor="#111111"
     >
-      <Container sx={{bgcolor:'#fff',py:10,borderRadius:5}}>
+      <Container sx={{bgcolor:'#fff',p:5,borderRadius:5}}>
         <StepperComp
           activeStep={activeStep}
           setActiveStep={setActiveStep}
