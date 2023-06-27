@@ -4,6 +4,7 @@ import { Button, Container, Stack, TextField } from "@mui/material";
 import { MedText, RegText } from "../../styles/fonts";
 import { validateInput } from "../../../helper/inputValidation";
 import DragAndDrop from "../../common/DragAndDrop";
+import MailTable from "../../common/Table";
 
 const StepOne = ({ stepOneHandler }) => {
   const [basePrompt, setBasePrompt] = useState("");
@@ -13,7 +14,7 @@ const StepOne = ({ stepOneHandler }) => {
   const [ctaUrl, setCtaUrl] = useState("");
   const [ctaUrlError, setCtaUrlError] = useState("");
 
-  const handleNext = () => {
+  const handleNext = (emailType) => {
     if (
       basePrompt.trim() === "" ||
       productPlaceholder.trim() === "" ||
@@ -22,7 +23,7 @@ const StepOne = ({ stepOneHandler }) => {
       return;
     }
     stepOneHandler({
-      emailType: "single",
+      emailType,
       basePrompt,
       productPlaceholder,
       ctaUrl,
@@ -114,13 +115,17 @@ const StepOne = ({ stepOneHandler }) => {
         </RegText>
       )}
       <Stack direction="row" gap="16px">
-        <Button variant="contained" color="primary" onClick={handleNext}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleNext("single")}
+        >
           <MedText>Single Email</MedText>
         </Button>
         <Button
           variant="contained"
           color="warning"
-          onClick={() => stepOneHandler({ emailType: "bulk" })}
+          onClick={() => handleNext("bulk")}
         >
           <MedText> Bulk Email</MedText>
         </Button>
@@ -134,6 +139,7 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   const [twitter, setTwitter] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [socialMediaError, setSocialMediaError] = useState("");
+  const [selectedCSV, setSelectedCSV] = useState();
 
   const handleName = (e) => {
     const inputValue = e.target.value;
@@ -142,10 +148,12 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   };
 
   const handleSubmit = () => {
-    if (name.trim() === "") return;
-    if (twitter.trim() === "" && linkedin.trim() === "") {
-      setSocialMediaError("Twitter or LinkedIn url can not be empty.");
-      return;
+    if (emailType === "single") {
+      if (name.trim() === "") return;
+      if (twitter.trim() === "" && linkedin.trim() === "") {
+        setSocialMediaError("Twitter or LinkedIn url can not be empty.");
+        return;
+      }
     }
     stepTwoHandler({
       emailType,
@@ -167,12 +175,11 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
           <MedText>Previous Step</MedText>
         </Button>
         <Button variant="contained" color="warning" onClick={handleSubmit}>
-          <MedText>Submit</MedText>
+          <MedText>Next</MedText>
         </Button>
       </Stack>
     );
   };
-  const [selectedCSV, setSelectedCSV] = useState();
   if (emailType === "single") {
     return (
       <Stack>
@@ -232,8 +239,105 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   if (emailType === "bulk") {
     return (
       <>
-        <DragAndDrop setSelectedCSV={setSelectedCSV} />;{renderBtns()}
+        <DragAndDrop
+          setSelectedCSV={setSelectedCSV}
+          selectedCSV={selectedCSV}
+        />
+        {renderBtns()}
       </>
+    );
+  }
+};
+const CommonEmailData = () => {
+  return (
+    <Stack gap="16px">
+      <TextField
+        label={
+          <RegText variant="body1" sx={styles.labelText}>
+            Subject
+          </RegText>
+        }
+      />
+      <TextField
+        multiline
+        rows={4}
+        label={
+          <RegText variant="body1" sx={styles.labelText}>
+            Body
+          </RegText>
+        }
+      />
+      <TextField
+        label={
+          <RegText variant="body1" sx={styles.labelText}>
+            Enter Email
+          </RegText>
+        }
+      />
+    </Stack>
+  );
+};
+const StepThree = ({ emailType, stepThreePrevHandler }) => {
+  const [editMail, setEditMail] = useState({ show: false, email: "" });
+  if (emailType === "single") {
+    return (
+      <>
+        <CommonEmailData stepThreePrevHandler={stepThreePrevHandler} />{" "}
+        <Stack direction="row" gap="16px" mt={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={stepThreePrevHandler}
+          >
+            <MedText>Previous Step</MedText>
+          </Button>
+          <Button variant="contained" color="warning">
+            <MedText>Save and Send Email</MedText>
+          </Button>
+          <Button variant="outlined" color="warning">
+            <MedText>Save</MedText>
+          </Button>
+        </Stack>
+      </>
+    );
+  }
+  if (emailType === "bulk") {
+    return (
+      <Stack mt={3}>
+        <Stack direction="row" gap="16px">
+          <MailTable setEditMail={setEditMail} />
+          {editMail.show && (
+            <Stack width="50%" bgcolor="#fcfcfc" p={2} borderRadius={3}>
+              <CommonEmailData />
+              <Stack direction="row" gap="16px">
+                <Button color="primary" variant="contained" sx={{ mt: 2 }}>
+                  <MedText>Save</MedText>
+                </Button>
+                <Button
+                  color="warning"
+                  variant="outlined"
+                  sx={{ mt: 2 }}
+                  onClick={() => setEditMail({ show: false, email: "" })}
+                >
+                  <MedText>close</MedText>
+                </Button>
+              </Stack>
+            </Stack>
+          )}
+        </Stack>
+        <Stack direction="row" gap="16px" mt={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={stepThreePrevHandler}
+          >
+            <MedText>Previous Step</MedText>
+          </Button>
+          <Button variant="contained" color="warning">
+            <MedText>Save All</MedText>
+          </Button>
+        </Stack>
+      </Stack>
     );
   }
 };
@@ -262,6 +366,9 @@ const Pages = () => {
   const stepTwoPrevStepHandler = () => {
     setActiveStep(0);
   };
+  const stepThreePrevHandler = () => {
+    setActiveStep(1);
+  };
   return (
     <Stack sx={styles.parentContainer}>
       <Container sx={styles.container}>
@@ -278,6 +385,12 @@ const Pages = () => {
             stepTwoPrevStepHandler={stepTwoPrevStepHandler}
           />
         )}
+        {activeStep === 2 && (
+          <StepThree
+            emailType={emailType}
+            stepThreePrevHandler={stepThreePrevHandler}
+          />
+        )}
       </Container>
     </Stack>
   );
@@ -291,7 +404,7 @@ const styles = {
     height: "100vh",
     bgcolor: "#111111",
   },
-  container: { bgcolor: "#fff", p: 5, borderRadius: 5, minHeight: "75vh" },
+  container: { bgcolor: "#fff", p: 5, borderRadius: 5 },
   labelText: {
     color: "#9e9e9e",
   },

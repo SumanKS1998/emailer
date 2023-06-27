@@ -1,11 +1,22 @@
 import { Button, Stack } from "@mui/material";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { BoldText, MedText, RegText } from "../../styles/fonts";
 
-function DragAndDrop({ setSelectedCSV }) {
+let firstRender = true;
+function DragAndDrop({ setSelectedCSV, selectedCSV }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [fileName, setFileName] = useState("");
+
+  useEffect(() => {
+    if (firstRender) {
+      firstRender = false;
+      return;
+    }
+    if (!selectedCSV) {
+      setErrorMessage("Select CSV file.");
+    }
+  }, [selectedCSV]);
 
   const onDrop = useCallback((acceptedFiles) => {
     setErrorMessage(""); // Reset error message
@@ -51,8 +62,17 @@ function DragAndDrop({ setSelectedCSV }) {
       </Button>
       <RegText>Or</RegText>
       <MedText variant="h6">Drag 'n' drop only CSV files here</MedText>
-      {fileName && <BoldText>Selected CSV file: <RegText component='span' ml={2}>{fileName}</RegText></BoldText>}
-      {errorMessage && <RegText style={{ color: "red" }}>{errorMessage}</RegText>}
+      {fileName && (
+        <BoldText>
+          Selected CSV file:{" "}
+          <RegText component="span" ml={2}>
+            {fileName}
+          </RegText>
+        </BoldText>
+      )}
+      {errorMessage && (
+        <RegText style={{ color: "red" }}>{errorMessage}</RegText>
+      )}
     </Stack>
   );
 }
