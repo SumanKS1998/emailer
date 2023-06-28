@@ -147,6 +147,16 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
     setName(inputValue);
   };
 
+  const btnStatus = () => {
+    if (emailType === "single") {
+      return !name || (!twitter && !linkedin);
+    }
+    if (emailType === "bulk") {
+      return !selectedCSV;
+    }
+    return false;
+  };
+
   const handleSubmit = () => {
     if (emailType === "single") {
       if (name.trim() === "") return;
@@ -167,8 +177,24 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   const renderBtns = () => {
     return (
       <Stack direction="row" gap="16px" mt={4}>
+
      
         <Button variant="contained" color="warning" onClick={handleSubmit}>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={stepTwoPrevStepHandler}
+        >
+          <MedText>Previous Step</MedText>
+        </Button>
+        <Button
+          variant="contained"
+          color="warning"
+          disabled={btnStatus()}
+          onClick={handleSubmit}
+        >
+
           <MedText>Next</MedText>
         </Button>
       </Stack>
