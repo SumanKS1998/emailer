@@ -167,13 +167,7 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
   const renderBtns = () => {
     return (
       <Stack direction="row" gap="16px" mt={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={stepTwoPrevStepHandler}
-        >
-          <MedText>Previous Step</MedText>
-        </Button>
+     
         <Button variant="contained" color="warning" onClick={handleSubmit}>
           <MedText>Next</MedText>
         </Button>
@@ -279,29 +273,6 @@ const CommonEmailData = () => {
 };
 const StepThree = ({ emailType, stepThreePrevHandler }) => {
   const [editMail, setEditMail] = useState({ show: false, email: "" });
-  if (emailType === "single") {
-    return (
-      <>
-        <CommonEmailData stepThreePrevHandler={stepThreePrevHandler} />{" "}
-        <Stack direction="row" gap="16px" mt={4}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={stepThreePrevHandler}
-          >
-            <MedText>Previous Step</MedText>
-          </Button>
-          <Button variant="contained" color="warning">
-            <MedText>Save and Send Email</MedText>
-          </Button>
-          <Button variant="outlined" color="warning">
-            <MedText>Save</MedText>
-          </Button>
-        </Stack>
-      </>
-    );
-  }
-  if (emailType === "bulk") {
     return (
       <Stack mt={3}>
         <Stack direction="row" gap="16px">
@@ -326,13 +297,7 @@ const StepThree = ({ emailType, stepThreePrevHandler }) => {
           )}
         </Stack>
         <Stack direction="row" gap="16px" mt={4}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={stepThreePrevHandler}
-          >
-            <MedText>Previous Step</MedText>
-          </Button>
+         
           <Button variant="contained" color="warning">
             <MedText>Save All</MedText>
           </Button>
@@ -340,7 +305,6 @@ const StepThree = ({ emailType, stepThreePrevHandler }) => {
       </Stack>
     );
   }
-};
 const Pages = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [emailType, setEmailType] = useState("");
