@@ -149,14 +149,10 @@ const StepTwo = ({ stepTwoHandler, emailType, stepTwoPrevStepHandler }) => {
 
   const btnStatus = () => {
     if (emailType === "single") {
-      if (!name || (!twitter && !linkedin)) {
-        return true;
-      }
+      return !name || (!twitter && !linkedin);
     }
     if (emailType === "bulk") {
-      if (!selectedCSV) {
-        return true;
-      }
+      return !selectedCSV;
     }
     return false;
   };
