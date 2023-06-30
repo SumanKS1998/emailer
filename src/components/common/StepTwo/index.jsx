@@ -23,8 +23,7 @@ const StepTwo = ({
   const [linkedin, setLinkedin] = useState("");
   const [socialMediaError, setSocialMediaError] = useState("");
   const [selectedCSV, setSelectedCSV] = useState();
-  console.log(selectedCSV);
-  const handleName = (e) => {
+   const handleName = (e) => {
     const inputValue = e.target.value;
     validateInput(inputValue, setNameError, "Name");
     setName(inputValue);

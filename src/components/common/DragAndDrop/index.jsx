@@ -19,7 +19,7 @@ function DragAndDrop({ setSelectedCSV, selectedCSV }) {
   }, [selectedCSV]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    setErrorMessage(""); // Reset error message
+    setErrorMessage("");  
     acceptedFiles.forEach((file) => {
       if (file.type !== "text/csv") {
         setErrorMessage("Please select a CSV file.");
@@ -28,9 +28,7 @@ function DragAndDrop({ setSelectedCSV, selectedCSV }) {
 
       const reader = new FileReader();
 
-      reader.onabort = () => console.log("File reading was aborted");
-      reader.onerror = () => console.log("File reading has failed");
-      reader.onload = () => {
+       reader.onload = () => {
         const fileData = new File([reader.result], file.name);
         setSelectedCSV(fileData);
       };
