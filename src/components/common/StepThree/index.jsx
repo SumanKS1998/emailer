@@ -4,12 +4,15 @@ import MailTable from "../Table";
 import CommonEmailData from "../CommonEmailData/inde";
 import { MedText } from "../../styles/fonts";
 
-const StepThree = ({ emailType, stepThreePrevHandler }) => {
+const StepThree = ({ emailType, stepThreePrevHandler, requestResponse }) => {
   const [editMail, setEditMail] = useState({ show: false, email: "" });
   return (
     <Stack mt={3}>
       <Stack direction="row" gap="16px">
-        <MailTable setEditMail={setEditMail} />
+        <MailTable
+          setEditMail={setEditMail}
+          requestResponse={requestResponse}
+        />
         {editMail.show && (
           <Stack width="50%" bgcolor="#fcfcfc" p={2} borderRadius={3}>
             <CommonEmailData />
@@ -30,6 +33,9 @@ const StepThree = ({ emailType, stepThreePrevHandler }) => {
         )}
       </Stack>
       <Stack direction="row" gap="16px" mt={4}>
+        <Button variant="contained" color="primary" onClick={stepThreePrevHandler}>
+          <MedText>Previous</MedText>
+        </Button>
         <Button variant="contained" color="warning">
           <MedText>Save All</MedText>
         </Button>

@@ -31,9 +31,8 @@ function DragAndDrop({ setSelectedCSV, selectedCSV }) {
       reader.onabort = () => console.log("File reading was aborted");
       reader.onerror = () => console.log("File reading has failed");
       reader.onload = () => {
-        const binaryStr = reader.result;
-        console.log("File name:", file.name);
-        setSelectedCSV(binaryStr);
+        const fileData = new File([reader.result], file.name);
+        setSelectedCSV(fileData);
       };
       reader.readAsArrayBuffer(file);
       setFileName(file.name);

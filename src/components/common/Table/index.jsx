@@ -41,20 +41,20 @@ const rows = [
   createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
-export default function MailTable({ setEditMail }) {
+export default function MailTable({ setEditMail, requestResponse }) {
   return (
     <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
       <Table aria-label="email table">
         <TableHead>
           <TableRow>
             <StyledTableCell>
-              <RegText>Subject</RegText>
+              <RegText>Name</RegText>
             </StyledTableCell>
             <StyledTableCell align="right">
-              <RegText>Body</RegText>
+              <RegText>LinkedIn URL</RegText>
             </StyledTableCell>
             <StyledTableCell align="right">
-              <RegText>Email ID</RegText>
+              <RegText>Twitter Handle</RegText>
             </StyledTableCell>
             <StyledTableCell align="right">
               <RegText>Edit</RegText>
@@ -62,16 +62,16 @@ export default function MailTable({ setEditMail }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {requestResponse?.map((row) => (
+            <StyledTableRow key={row?.Name}>
               <StyledTableCell component="th" scope="row">
-                <RegText> {row.name}</RegText>
+                <RegText> {row?.Name}</RegText>
               </StyledTableCell>
               <StyledTableCell align="right">
-                <RegText>{row.calories}</RegText>
+                <RegText>{row?.LinkedinUrl}</RegText>
               </StyledTableCell>
               <StyledTableCell align="right">
-                <RegText>{row.fat}</RegText>
+                <RegText>{row?.TwitterHandle}</RegText>
               </StyledTableCell>
               <StyledTableCell align="right">
                 <RegText

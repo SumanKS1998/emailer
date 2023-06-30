@@ -2,13 +2,20 @@ import { Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { MedText, RegText } from "../../styles/fonts";
 import { styles } from "../../styles/commonStyles";
-import {validateInput} from "../../../helper/inputValidation";
-const StepOne = ({ stepOneHandler }) => {
-  const [basePrompt, setBasePrompt] = useState("");
+import { validateInput } from "../../../helper/inputValidation";
+const StepOne = ({
+  stepOneHandler,
+  basePrompt,
+  setBasePrompt,
+  productPlaceholder,
+  setProductPlaceholder,
+  ctaUrl,
+  setCtaUrl,
+}) => {
   const [basePromptError, setBasePromptError] = useState("");
-  const [productPlaceholder, setProductPlaceholder] = useState("");
+
   const [productPlaceholderError, setProductPlaceholderError] = useState("");
-  const [ctaUrl, setCtaUrl] = useState("");
+
   const [ctaUrlError, setCtaUrlError] = useState("");
 
   const handleNext = (emailType) => {

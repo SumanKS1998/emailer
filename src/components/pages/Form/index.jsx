@@ -7,26 +7,21 @@ import StepThree from "../../common/StepThree";
 import { styles } from "../../styles/commonStyles";
 
 const Pages = () => {
+  const [requestResponse, setRequestResponse] = useState({});
+  const [basePrompt, setBasePrompt] = useState("");
+  const [productPlaceholder, setProductPlaceholder] = useState("");
+  const [ctaUrl, setCtaUrl] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [emailType, setEmailType] = useState("");
-  const steps = ["Enter basic details", "Enter Emails", "Submit"];
+  const steps = ["Step 1", "Step 2", "Step 3"];
   const stepOneHandler = (data) => {
-    const { emailType, basePrompt, productPlaceholder, ctaUrl } = data;
-    console.log("Step One Completed - Type: ", emailType);
-    console.log("Base Prompt: ", basePrompt);
-    console.log("Product Placeholder: ", productPlaceholder);
-    console.log("CTA URL: ", ctaUrl);
+    const { emailType } = data;
+
     setActiveStep(1);
     setEmailType(emailType);
   };
-  const stepTwoHandler = (data) => {
-    const { name, twitter, linkedin, emailType } = data;
-    console.log("Step Two Completed - Type: ", emailType);
-    console.log("Name: ", name);
-    console.log("Twitter: ", twitter);
-    console.log("LinkedIn: ", linkedin);
+  const stepTwoHandler = () => {
     setActiveStep(2);
-    setEmailType(emailType);
   };
   const stepTwoPrevStepHandler = () => {
     setActiveStep(0);
@@ -42,18 +37,33 @@ const Pages = () => {
           setActiveStep={setActiveStep}
           steps={steps}
         />
-        {activeStep === 0 && <StepOne stepOneHandler={stepOneHandler} />}
+        {activeStep === 0 && (
+          <StepOne
+            stepOneHandler={stepOneHandler}
+            basePrompt={basePrompt}
+            setBasePrompt={setBasePrompt}
+            productPlaceholder={productPlaceholder}
+            setProductPlaceholder={setProductPlaceholder}
+            ctaUrl={ctaUrl}
+            setCtaUrl={setCtaUrl}
+          />
+        )}
         {activeStep === 1 && (
           <StepTwo
             stepTwoHandler={stepTwoHandler}
             emailType={emailType}
             stepTwoPrevStepHandler={stepTwoPrevStepHandler}
+            basePrompt={basePrompt}
+            productPlaceholder={productPlaceholder}
+            ctaUrl={ctaUrl}
+            setRequestResponse={setRequestResponse}
           />
         )}
         {activeStep === 2 && (
           <StepThree
             emailType={emailType}
             stepThreePrevHandler={stepThreePrevHandler}
+            requestResponse={requestResponse}
           />
         )}
       </Container>
